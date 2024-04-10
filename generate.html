@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRGames Generator</title>
+</head>
+
+<body>
+    <h1>QRGames Generator</h1>
+    <form id="formgenerator">
+        <label for="render">Render</label><br>
+        <textarea id="render" rows="6" cols="50"></textarea><br>
+        <label for="script">Script</label><br>
+        <textarea id="script" rows="10" cols="50"></textarea><br>
+        <button type="button" onclick="generate()">Generate</button>
+    </form>
+
+    <h1>Result:</h1>
+    <div id="qrcode"></div>
+    <script src="https://cdn.jsdelivr.net/npm/qr-creator/dist/qr-creator.min.js"></script>
+    <script>
+        function generate() {
+            var render = document.getElementById('render').value;
+            var script = document.getElementById('script').value;
+            var json = {
+                "render": render,
+                "script": script
+            };
+            var jsonString = JSON.stringify(json);
+            console.log(jsonString);
+            document.getElementById('qrcode').innerHTML = '';
+            QrCreator.render({
+                text: jsonString,
+                radius: 0,
+                ecLevel: 'L',
+                background: null,
+                size: 700
+            }, document.getElementById('qrcode'));
+        }
+    </script>
+</body>
+
+</html>

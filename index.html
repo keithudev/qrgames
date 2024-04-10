@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner / Reader</title>
+</head>
+<body>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #292929;
+        color: white;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .container h1 {
+        color: #ffffff;
+        margin-left: 10px;
+    }
+
+    .navlinks{
+        font-size: large;
+        text-decoration: none;
+        color: #ffffff;
+        margin-right: 20px;
+    }
+
+    .section {
+        background-color: #131313;
+        padding: 50px 30px;
+        border-radius: 0.25em;
+        box-shadow: 0 20px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .navbar {
+        display: flex;
+    }
+
+    .left {
+        margin-right: auto; /* Empuja el div hacia la izquierda */
+    }
+
+    .right {
+        margin-left: auto; /* Empuja el div hacia la derecha */
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+
+    #my-qr-reader {
+        padding: 20px !important;
+        border: 0px solid;
+        border-radius: 8px;
+    }
+
+    #my-qr-reader img[alt="Info icon"],
+    #my-qr-reader__scan_region img[alt="Fule based scan"],
+    #my-qr-reader img[alt="Camera based scan"] {
+        display: none;
+    }
+
+    button {
+        font-family: 'CustomFont', sans-serif;
+        font-size: 18px;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #1e1e1e;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        cursor: pointer;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s, transform 0.2s;
+        margin-bottom: 10px;
+    }
+
+    button:hover {
+        background-color: #3f3f3f;
+        transform: translateY(-2px);
+    }
+
+    #html5-qrcode-anchor-scan-type-change {
+        text-decoration: none !important;
+        color: #1d9bf0;
+    }
+
+    video {
+        width: 100% !important;
+        border: 1px solid #b2b2b2 !important;
+        border-radius: 0.25em;
+    }
+</style>
+
+<div class="container">
+    <div class="navbar">
+        <div class="left">
+            <h1>QRGames</h1>
+        </div>
+        <div class="right">
+            <a href="generate.html" class="navlinks">Generate</a>
+            <a href="generate.html" class="navlinks">GitHub</a>
+        </div>
+    </div>
+    <div class="section">
+        <div id="my-qr-reader"></div>
+    </div>
+    <div id="result"></div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+    function domReady(fn) {
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            setTimeout(fn, 1000);
+        } else {
+            document.addEventListener("DOMContentLoaded", fn);
+        }
+    }
+
+    domReady(function () {
+        var scanned = false;
+        function onScanSuccess(decodeText, decodeResult) {
+            if (scanned == false) {
+                try {
+                    scanned = true
+                    let jsonData = JSON.parse(decodeText, decodeResult);
+                    document.body.innerHTML = jsonData.render;
+                    eval(jsonData.script);
+                } catch (error) {
+                    alert(error);
+                }
+            }
+        }
+
+        let htmlscanner = new Html5QrcodeScanner(
+            "my-qr-reader",
+            { fps: 10, qrbos: 250 }
+        );
+        htmlscanner.render(onScanSuccess);
+        document.getElementById("my-qr-reader").style.border = "";
+        document.getElementById("my-qr-reader__scan_region").style = "";
+        document.querySelector("#my-qr-reader__dashboard_section > div:nth-child(1) > div:nth-child(2)").style = "display: none; margin-bottom: 20px;";
+    });
+</script>
+</body>
+</html>
